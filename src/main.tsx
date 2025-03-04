@@ -5,8 +5,8 @@ import './index.css';
 import { supabase } from './api/supabaseClient.ts';
 
 const { data, error } = await supabase.auth.signInWithPassword({
-  email: "automationtest@codegem.co.uk",
-  password: "codegemcouk",
+  email: "sgyimah2002@yahoo.com",
+  password: "Luvyadee@04",
 });
 
 createRoot(document.getElementById('root')!).render(
