@@ -180,7 +180,7 @@ const Admin: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Price ($)
+                    Price (£)
                   </label>
                   <input
                     type="number"
@@ -302,7 +302,7 @@ const Admin: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          ${product.price.toFixed(2)}
+                        £{product.price.toFixed(2)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

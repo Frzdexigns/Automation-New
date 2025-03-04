@@ -30,11 +30,12 @@ const Header: React.FC<HeaderProps> = ({ toggleCart }) => {
                 <span className="sr-only">Open main menu</span>
                 <Menu className="h-6 w-6" />
               </button>
-              <div className="flex-shrink-0 flex items-center ml-4">
+              
+            </div>
+            <div className="flex-shrink-0 flex items-center ml-4 ">
                 <Package className="h-8 w-8 text-emerald-600" />
                 <span className="ml-2 text-xl font-bold text-gray-900">Automation Tests</span>
               </div>
-            </div>
             <div className="flex items-center">
               {user?.type === 'problem' ? (
                 <button

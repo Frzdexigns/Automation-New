@@ -53,7 +53,7 @@ const CartPanel: React.FC<CartPanelProps> = ({ isOpen, onClose }) => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                        <p className="text-sm text-gray-500">${item.price.toFixed(2)}</p>
+                        <p className="text-sm text-gray-500">£{item.price.toFixed(2)}</p>
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
@@ -87,7 +87,7 @@ const CartPanel: React.FC<CartPanelProps> = ({ isOpen, onClose }) => {
           <div className="border-t border-gray-200 p-4">
             <div className="flex justify-between text-base font-medium text-gray-900 mb-4">
               <p>Subtotal</p>
-              <p>${getTotalPrice().toFixed(2)}</p>
+              <p>£{getTotalPrice().toFixed(2)}</p>
             </div>
             <button
               onClick={handleCheckout}

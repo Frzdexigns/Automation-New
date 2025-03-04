@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../api/api';
 import { useCartStore } from '../store/cartStore';
-import { useAuthStore } from '../store/authStore';
 import { Product } from '../types';
 import { Loader } from 'lucide-react';
 
@@ -11,28 +10,59 @@ const ProductGrid: React.FC = () => {
     queryKey: ['products'],
     queryFn: fetchProducts
   });
-  
-  const [cartQuantities, setCartQuantities] = useState<{ [key: number]: number }>({});
+
   const addToCart = useCartStore(state => state.addToCart);
-  const user = useAuthStore(state => state.user);
+  const removeFromCart = useCartStore(state => state.removeFromCart);
+  const items = useCartStore(state => state.items) || [];
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>(
+    products?.reduce((acc, product) => ({ ...acc, [product.id]: 0 }), {}) || {}
+  );  
+  const [sortOption, setSortOption] = useState('hilo'); // Default: Price (high to low)
+
+  const handleIncrease = (productId: number, stock: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [productId]: Math.min(stock, (prev[productId] || 0) + 1)
+    }));
+  };
+
+  const handleDecrease = (productId: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [productId]: Math.max(0, (prev[productId] || 0) - 1) // Allow 0
+    }));
+  };
   
+
   const handleAddToCart = (product: Product) => {
-    // For problem_user, adding to cart is buggy
-    if (user?.type === 'problem') {
-      if (Math.random() > 0.3) {
-        addToCart(product);
-      }
-    } else {
+    const quantity = quantities[product.id] || 0;
+    for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
-
-     // Update quantity for the specific product
-     setCartQuantities(prevQuantities => ({
-      ...prevQuantities,
-      [product.id]: (prevQuantities[product.id] || 0) + 1
-    }));
-
   };
+
+  const handleRemoveFromCart = (product: Product) => {
+    removeFromCart(product.id); // Remove the product from cart
+    
+    // Reset quantity display to 0
+    setQuantities(prev => ({
+      ...prev,
+      [product.id]: 0 // Set the removed product's quantity to 0
+    }));
+  };
+  
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOption(event.target.value);
+  };
+
+  const sortedProducts = products ? [...products].sort((a, b) => {
+    if (sortOption === 'az') return a.name.localeCompare(b.name);
+    if (sortOption === 'za') return b.name.localeCompare(a.name);
+    if (sortOption === 'lohi') return a.price - b.price;
+    if (sortOption === 'hilo') return b.price - a.price;
+    return 0;
+  }) : [];
 
   if (isLoading) {
     return (
@@ -51,43 +81,91 @@ const ProductGrid: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {products?.map((product) => (
-        <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="h-48 overflow-hidden">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div className="p-4">
-            <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-            <p className="mt-1 text-gray-600 text-sm line-clamp-2">{product.description}</p>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="text-emerald-600 font-bold">${product.price.toFixed(2)}</span>
-
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Add to Cart
-                </button>
-                
-                {/* Quantity Indicator */}
-                {cartQuantities[product.id] && (
-                  <span className="bg-blue-500 text-white text-sm font-bold px-2 py-1 rounded-full">
-                    {cartQuantities[product.id]}
-                  </span>
-                )}
-              </div>
-                
-            </div>
-          </div>
+    <div>
+      {/* Header Section with Filters */}
+      <div className="flex justify-between items-center bg-gray-100 p-4 rounded-md mb-4">
+        <span className="text-xl font-semibold">Products</span>
+        <div className="flex items-center space-x-2">
+          <label htmlFor="sort" className="text-gray-600 text-sm">Sort by:</label>
+          <select
+            id="sort"
+            value={sortOption}
+            onChange={handleSortChange}
+            className="border border-gray-300 rounded-md p-2 text-sm"
+          >
+            <option value="az">Name (A to Z)</option>
+            <option value="za">Name (Z to A)</option>
+            <option value="lohi">Price (Low to High)</option>
+            <option value="hilo">Price (High to Low)</option>
+          </select>
         </div>
-      ))}
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedProducts.map((product) => {
+          const isInCart = items.some(item => item.id === product.id);
+          return (
+            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="h-48 overflow-hidden">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                <p className="mt-1 text-gray-600 text-sm line-clamp-2">{product.description}</p>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-emerald-600 font-bold">£{product.price.toFixed(2)}</span>
+
+                  <div className="flex items-center space-x-2">
+                    {/* Decrease Button */}
+                    <button
+                      onClick={() => handleDecrease(product.id)}
+                      className="bg-gray-200 px-2 py-1 rounded-lg text-black hover:bg-gray-300 transition text-xs"
+                    >
+                      <strong>-</strong>
+                    </button>
+
+                    {/* Quantity Display */}
+                    <span className="px-1 text-lg font-semibold">{quantities[product.id] || 0}</span>
+
+                    {/* Increase Button */}
+                    <button
+                      onClick={() => handleIncrease(product.id, product.stock)}
+                      disabled={(quantities[product.id] || 0) >= product.stock}
+                      className="bg-gray-200 px-2 py-1 rounded-lg text-black hover:bg-gray-300 transition text-xs disabled:opacity-50"
+                    >
+                      <strong>+</strong>
+                    </button>
+
+                    {/* Add to Cart Button */}
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-xs"
+                    >
+                      Add
+                    </button>
+
+                    {/* Show Remove Button only if product is in cart */}
+                    {isInCart && (
+                      <button
+                        onClick={() => handleRemoveFromCart(product)}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-xs"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

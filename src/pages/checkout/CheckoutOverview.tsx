@@ -65,7 +65,7 @@ const CheckoutOverview: React.FC = () => {
                     <span className="text-gray-700">{item.name}</span>
                     <span className="ml-2 text-gray-500">x{item.quantity}</span>
                   </div>
-                  <span className="text-gray-900">${(item.price * item.quantity).toFixed(2)}</span>
+                  <span className="text-gray-900">£{(item.price * item.quantity).toFixed(2)}</span>
                 </li>
               ))}
             </ul>
@@ -74,7 +74,7 @@ const CheckoutOverview: React.FC = () => {
           <div className="p-6">
             <div className="flex justify-between text-base font-medium text-gray-900 mb-4">
               <p>Total</p>
-              <p>${getTotalPrice().toFixed(2)}</p>
+              <p>£{getTotalPrice().toFixed(2)}</p>
             </div>
             
             <div className="flex justify-end">
