@@ -4,11 +4,22 @@ import { fetchProducts } from '../api/api';
 import { useCartStore } from '../store/cartStore';
 import { Product } from '../types';
 import { Loader } from 'lucide-react';
+import { useAuthStore } from "../store/authStore";
+
+const getDelay = () => {
+  const user = useAuthStore.getState().user;
+  return user?.type === "performance_glitch" ? 2000 : 0;
+};
 
 const ProductGrid: React.FC = () => {
+  const delay = getDelay(); // Get the delay time
+
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['products'],
-    queryFn: fetchProducts
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, delay)); // Apply delay before fetching
+      return fetchProducts();
+    },
   });
 
   const addToCart = useCartStore(state => state.addToCart);
@@ -34,13 +45,18 @@ const ProductGrid: React.FC = () => {
   };
   
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = async (product: Product) => {
+    const delay = getDelay(); // Get the delay time
+    console.log(Applied Delay: ${delay}ms); // Debugging
+  
+    await new Promise((resolve) => setTimeout(resolve, delay)); // Apply delay
+  
     const quantity = quantities[product.id] || 0;
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
   };
-
+  
   const handleRemoveFromCart = (product: Product) => {
     removeFromCart(product.id); // Remove the product from cart
     
