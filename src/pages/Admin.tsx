@@ -108,32 +108,34 @@ const Admin: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div id="page-container" className="min-h-screen bg-gray-50">
       <Header toggleCart={toggleCart} />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="top-bar" className="flex justify-between items-center mb-8">
+          <div id="navigation" className="flex items-center">
             <button 
+              id="back-button"
               onClick={() => navigate('/')}
               className="mr-4 p-2 rounded-full hover:bg-gray-200 transition-colors"
             >
-              <ArrowLeft className="h-5 w-5 text-gray-600" />
+              <ArrowLeft id="back-icon" className="h-5 w-5 text-gray-600" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">Product Manager</h1>
+            <h1 id="page-title" className="text-2xl font-bold text-gray-900">Product Manager</h1>
           </div>
           <button
+            id="toggle-form-button"
             onClick={() => setIsFormOpen(!isFormOpen)}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
           >
             {isFormOpen ? (
               <>
-                <X className="mr-2 h-4 w-4" />
+                <X id="cancel-icon" className="mr-2 h-4 w-4" />
                 Cancel
               </>
             ) : (
               <>
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus id="add-icon" className="mr-2 h-4 w-4" />
                 Add Product
               </>
             )}
@@ -141,13 +143,13 @@ const Admin: React.FC = () => {
         </div>
         
         {isFormOpen && (
-          <div className="bg-white shadow-md rounded-lg p-6 mb-8">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
+          <div id="product-form-container" className="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 id="form-title" className="text-lg font-medium text-gray-900 mb-4">
               {editingId !== null ? 'Edit Product' : 'Add New Product'}
             </h2>
             
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+            <form id="product-form" onSubmit={handleSubmit} className="space-y-4">
+              <div id="name-field">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Product Name
                 </label>
@@ -162,7 +164,7 @@ const Admin: React.FC = () => {
                 />
               </div>
               
-              <div>
+              <div id="description-field">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                   Description
                 </label>
@@ -177,8 +179,8 @@ const Admin: React.FC = () => {
                 />
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
+              <div id="price-stock-image" className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div id="price-field">
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700">
                     Price (£)
                   </label>
@@ -195,7 +197,7 @@ const Admin: React.FC = () => {
                   />
                 </div>
                 
-                <div>
+                <div id="stock-field">
                   <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
                     Stock Quantity
                   </label>
@@ -211,7 +213,7 @@ const Admin: React.FC = () => {
                   />
                 </div>
                 
-                <div>
+                <div id="image-field">
                   <label htmlFor="image" className="block text-sm font-medium text-gray-700">
                     Image URL
                   </label>
@@ -227,8 +229,9 @@ const Admin: React.FC = () => {
                 </div>
               </div>
               
-              <div className="flex justify-end">
+              <div id="form-buttons" className="flex justify-end">
                 <button
+                  id="cancel-form-button"
                   type="button"
                   onClick={resetForm}
                   className="mr-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
@@ -236,10 +239,11 @@ const Admin: React.FC = () => {
                   Cancel
                 </button>
                 <button
+                  id="submit-form-button"
                   type="submit"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                 >
-                  <Save className="mr-2 h-4 w-4" />
+                  <Save id="save-icon" className="mr-2 h-4 w-4" />
                   {editingId !== null ? 'Update Product' : 'Add Product'}
                 </button>
               </div>
@@ -247,77 +251,81 @@ const Admin: React.FC = () => {
           </div>
         )}
         
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        
+        <div id="product-table-container" className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div id="table-wrapper" className="overflow-x-auto">
+            <table id="product-table" className="min-w-full divide-y divide-gray-200">
+              <thead id="table-header" className="bg-gray-50">
+                <tr id="header-row">
+                  <th id="header-product" scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Product
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th id="header-description" scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Description
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th id="header-price" scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Price
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th id="header-stock" scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Stock
                   </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th id="header-actions" scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody id="table-body" className="bg-white divide-y divide-gray-200">
                 {isLoading ? (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-4 text-center">
+                  <tr id="loading-row">
+                    <td id="loading-cell" colSpan={5} className="px-6 py-4 text-center">
                       Loading...
                     </td>
                   </tr>
                 ) : (
                   products?.map((product) => (
-                    <tr key={product.id}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
+                    <tr id={`product-row-${product.id}`} key={product.id}>
+                      <td id={`product-name-${product.id}`} className="px-6 py-4 whitespace-nowrap">
+                        <div id={`product-info-${product.id}`} className="flex items-center">
+                          <div id={`product-image-container-${product.id}`} className="flex-shrink-0 h-10 w-10">
                             <img
+                              id={`product-image-${product.id}`}
                               className="h-10 w-10 rounded-full object-cover"
                               src={product.image}
                               alt={product.name}
                             />
                           </div>
-                          <div className="ml-4">
+                          <div id={`product-text-${product.id}`} className="ml-4">
                             <div className="text-sm font-medium text-gray-900">
                               {product.name}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td id={`product-description-${product.id}`} className="px-6 py-4">
                         <div className="text-sm text-gray-500 line-clamp-2">
                           {product.description}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td id={`product-price-${product.id}`} className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
                         £{product.price.toFixed(2)}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td id={`product-stock-${product.id}`} className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
                           {product.stock}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td id={`product-actions-${product.id}`} className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
+                          id={`edit-button-${product.id}`}
                           onClick={() => handleEdit(product)}
                           className="text-emerald-600 hover:text-emerald-900 mr-3"
                         >
                           <Edit className="h-5 w-5" />
                         </button>
                         <button
+                          id={`delete-button-${product.id}`}
                           onClick={() => handleDelete(product.id)}
                           className="text-red-600 hover:text-red-900"
                         >
@@ -332,6 +340,7 @@ const Admin: React.FC = () => {
           </div>
         </div>
       </main>
+      
       
       <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
