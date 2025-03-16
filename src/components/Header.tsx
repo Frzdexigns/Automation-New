@@ -39,9 +39,9 @@ const Header: React.FC<HeaderProps> = ({ toggleCart }) => {
             <div id="cart-container" className="flex items-center">
               {user?.type === 'problem' ? (
                 <button
-                  id="cart-button-problem"
+                  id="cart-button"
                   onClick={() => {
-                    if (Math.random() > 0.5) {
+                    if (Math.random() > 0.8) {
                       toggleCart();
                     }
                   }}
