@@ -4,6 +4,7 @@ import { useAuthStore } from '../../store/authStore';
 import Header from '../../components/Header';
 import { Package, ArrowRight } from 'lucide-react';
 
+
 interface FormData {
   firstName: string;
   lastName: string;
@@ -73,17 +74,17 @@ const CheckoutInformation: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div id="checkoutInformationContainer" className="min-h-screen bg-gray-50">
       <Header toggleCart={() => {}} />
       
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Checkout: Your Information</h1>
+      <main id="checkoutMain" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="checkoutTitleContainer" className="mb-8">
+          <h1 id="checkoutTitle" className="text-2xl font-bold text-gray-900">Checkout: Your Information</h1>
         </div>
         
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+        <div id="checkoutFormContainer" className="bg-white shadow-md rounded-lg p-6">
+          <form id="checkoutForm" onSubmit={handleSubmit} className="space-y-6">
+            <div id="firstNameContainer">
               <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                 First Name
               </label>
@@ -96,11 +97,11 @@ const CheckoutInformation: React.FC = () => {
                 className={`mt-1 block w-full px-3 py-2 border ${errors.firstName ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500`}
               />
               {errors.firstName && (
-                <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+                <p id="firstNameError" className="mt-1 text-sm text-red-600">{errors.firstName}</p>
               )}
             </div>
             
-            <div>
+            <div id="lastNameContainer">
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                 Last Name
               </label>
@@ -113,11 +114,11 @@ const CheckoutInformation: React.FC = () => {
                 className={`mt-1 block w-full px-3 py-2 border ${errors.lastName ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500`}
               />
               {errors.lastName && (
-                <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                <p id="lastNameError" className="mt-1 text-sm text-red-600">{errors.lastName}</p>
               )}
             </div>
             
-            <div>
+            <div id="postalCodeContainer">
               <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">
                 Postal Code
               </label>
@@ -131,20 +132,21 @@ const CheckoutInformation: React.FC = () => {
                 disabled={user?.type === 'error'}
               />
               {errors.postalCode && (
-                <p className="mt-1 text-sm text-red-600">{errors.postalCode}</p>
+                <p id="postalCodeError" className="mt-1 text-sm text-red-600">{errors.postalCode}</p>
               )}
               {user?.type === 'error' && (
-                <p className="mt-1 text-sm text-amber-600">This field cannot be edited due to a system error.</p>
+                <p id="postalCodeWarning" className="mt-1 text-sm text-amber-600"></p>
               )}
             </div>
             
-            <div className="flex justify-end">
+            <div id="checkoutActions" className="flex justify-end">
               <button
+                id="continueButton"
                 type="submit"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
               >
                 Continue
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight id="continueIcon" className="ml-2 h-4 w-4" />
               </button>
             </div>
           </form>
