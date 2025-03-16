@@ -21,26 +21,27 @@ const CheckoutComplete: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div id="orderConfirmationContainer" className="min-h-screen bg-gray-50">
       <Header toggleCart={() => {}} />
       
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center">
-          <div className="flex justify-center">
-            <CheckCircle className="h-16 w-16 text-emerald-500" />
+      <main id="orderMain" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="orderContent" className="text-center">
+          <div id="orderIconContainer" className="flex justify-center">
+            <CheckCircle id="orderSuccessIcon" className="h-16 w-16 text-emerald-500" />
           </div>
           
-          <h1 className="mt-4 text-3xl font-bold text-gray-900">Thank You!</h1>
-          <p className="mt-2 text-lg text-gray-600">Your order has been placed successfully.</p>
+          <h1 id="orderTitle" className="mt-4 text-3xl font-bold text-gray-900">Thank You!</h1>
+          <p id="orderMessage" className="mt-2 text-lg text-gray-600">Your order has been placed successfully.</p>
           
-          <div className="mt-8 bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900">Order Confirmation</h2>
-            <p className="mt-2 text-gray-600">
+          <div id="orderDetails" className="mt-8 bg-white shadow-md rounded-lg p-6">
+            <h2 id="orderConfirmationTitle" className="text-lg font-medium text-gray-900">Order Confirmation</h2>
+            <p id="orderConfirmationMessage" className="mt-2 text-gray-600">
               A confirmation email has been sent to your email address.
             </p>
             
-            <div className="mt-6">
+            <div id="orderActions" className="mt-6">
               <button
+                id="backToProductsButton"
                 onClick={handleBackToProducts}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
               >
@@ -52,6 +53,7 @@ const CheckoutComplete: React.FC = () => {
       </main>
     </div>
   );
+
 };
 
 export default CheckoutComplete;
