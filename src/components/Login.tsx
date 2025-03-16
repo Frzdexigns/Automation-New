@@ -18,22 +18,21 @@ const Login: React.FC = () => {
       navigate('/', { replace: true });
     }
   };
-
   return (
-    <div className="min-h-screen bg-emerald-50 flex flex-col items-center justify-center p-4">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-emerald-800">Automation Test</h1>
+    <div id="login-page" className="min-h-screen bg-emerald-50 flex flex-col items-center justify-center p-4">
+      <div id="header" className="text-center mb-8">
+        <h1 id="page-title" className="text-3xl font-bold text-emerald-800">Automation Test</h1>
       </div>
       
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden">
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+      <div id="login-container" className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden">
+        <form id="login-form" onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="space-y-4">
-            <div>
+            <div id="username-container">
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                 Username
               </label>
               <input
-                id="username"
+                id="username-input"
                 type="text"
                 value={username}
                 onChange={(e) => {
@@ -46,12 +45,12 @@ const Login: React.FC = () => {
               />
             </div>
             
-            <div>
+            <div id="password-container">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
-                id="password"
+                id="password-input"
                 type="password"
                 value={password}
                 onChange={(e) => {
@@ -66,7 +65,7 @@ const Login: React.FC = () => {
           </div>
           
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4">
+            <div id="error-message" className="bg-red-50 border-l-4 border-red-500 p-4">
               <div className="flex">
                 <div className="ml-3">
                   <p className="text-sm text-red-700">{error}</p>
@@ -75,8 +74,9 @@ const Login: React.FC = () => {
             </div>
           )}
           
-          <div>
+          <div id="submit-container">
             <button
+              id="login-button"
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
             >
@@ -86,11 +86,11 @@ const Login: React.FC = () => {
         </form>
       </div>
       
-      <div className="mt-8 bg-gray-900 text-white p-6 rounded-lg w-full max-w-md">
+      <div id="credentials-container" className="mt-8 bg-gray-900 text-white p-6 rounded-lg w-full max-w-md">
         <div className="grid grid-cols-2 gap-4">
-          <div>
+          <div id="username-list">
             <h3 className="text-lg font-mono mb-2">Accepted usernames are:</h3>
-            <ul className="space-y-1 font-mono text-sm">
+            <ul id="accepted-usernames" className="space-y-1 font-mono text-sm">
               <li>standard_user</li>
               <li>locked_out_user</li>
               <li>problem_user</li>
@@ -99,14 +99,14 @@ const Login: React.FC = () => {
               <li>visual_user</li>
             </ul>
           </div>
-          <div>
+          <div id="password-info">
             <h3 className="text-lg font-mono mb-2">Password for all users:</h3>
-            <p className="font-mono text-sm">secret_sauce</p>
+            <p id="common-password" className="font-mono text-sm">secret_sauce</p>
           </div>
         </div>
       </div>
     </div>
-  );
+  );  
 };
 
 export default Login;
