@@ -47,7 +47,7 @@ const ProductGrid: React.FC = () => {
 
   const handleAddToCart = async (product: Product) => {
     const delay = getDelay(); // Get the delay time
-    console.log(Applied Delay: ${delay}ms); // Debugging
+    console.log(`Applied Delay: ${delay}ms`); // Debugging
   
     await new Promise((resolve) => setTimeout(resolve, delay)); // Apply delay
   
@@ -97,14 +97,14 @@ const ProductGrid: React.FC = () => {
   }
 
   return (
-    <div>
+    <div id="product-page">
       {/* Header Section with Filters */}
-      <div className="flex justify-between items-center bg-gray-100 p-4 rounded-md mb-4">
-        <span className="text-xl font-semibold">Products</span>
-        <div className="flex items-center space-x-2">
+      <div id="header-section" className="flex justify-between items-center bg-gray-100 p-4 rounded-md mb-4">
+        <span id="products-title" className="text-xl font-semibold">Products</span>
+        <div id="sort-container" className="flex items-center space-x-2">
           <label htmlFor="sort" className="text-gray-600 text-sm">Sort by:</label>
           <select
-            id="sort"
+            id="sort-dropdown"
             value={sortOption}
             onChange={handleSortChange}
             className="border border-gray-300 rounded-md p-2 text-sm"
@@ -116,14 +116,14 @@ const ProductGrid: React.FC = () => {
           </select>
         </div>
       </div>
-
+  
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div id="product-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedProducts.map((product) => {
           const isInCart = items.some(item => item.id === product.id);
           return (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-48 overflow-hidden">
+            <div key={product.id} id={`product-${product.id}`} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div id={`product-image-${product.id}`} className="h-48 overflow-hidden">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -131,44 +131,48 @@ const ProductGrid: React.FC = () => {
                   loading="lazy"
                 />
               </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-                <p className="mt-1 text-gray-600 text-sm line-clamp-2">{product.description}</p>
+              <div id={`product-info-${product.id}`} className="p-4">
+                <h3 id={`product-name-${product.id}`} className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                <p id={`product-description-${product.id}`} className="mt-1 text-gray-600 text-sm line-clamp-2">{product.description}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-emerald-600 font-bold">£{product.price.toFixed(2)}</span>
-
-                  <div className="flex items-center space-x-2">
+                  <span id={`product-price-${product.id}`} className="text-emerald-600 font-bold">£{product.price.toFixed(2)}</span>
+  
+                  <div id={`cart-controls-${product.id}`} className="flex items-center space-x-2">
                     {/* Decrease Button */}
                     <button
+                      id={`decrease-btn-${product.id}`}
                       onClick={() => handleDecrease(product.id)}
                       className="bg-gray-200 px-2 py-1 rounded-lg text-black hover:bg-gray-300 transition text-xs"
                     >
                       <strong>-</strong>
                     </button>
-
+  
                     {/* Quantity Display */}
-                    <span className="px-1 text-lg font-semibold">{quantities[product.id] || 0}</span>
-
+                    <span id={`product-quantity-${product.id}`} className="px-1 text-lg font-semibold">{quantities[product.id] || 0}</span>
+  
                     {/* Increase Button */}
                     <button
+                      id={`increase-btn-${product.id}`}
                       onClick={() => handleIncrease(product.id, product.stock)}
                       disabled={(quantities[product.id] || 0) >= product.stock}
                       className="bg-gray-200 px-2 py-1 rounded-lg text-black hover:bg-gray-300 transition text-xs disabled:opacity-50"
                     >
                       <strong>+</strong>
                     </button>
-
+  
                     {/* Add to Cart Button */}
                     <button
+                      id={`add-to-cart-btn-${product.id}`}
                       onClick={() => handleAddToCart(product)}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-xs"
                     >
                       Add
                     </button>
-
+  
                     {/* Show Remove Button only if product is in cart */}
                     {isInCart && (
                       <button
+                        id={`remove-from-cart-btn-${product.id}`}
                         onClick={() => handleRemoveFromCart(product)}
                         className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-xs"
                       >
@@ -184,6 +188,7 @@ const ProductGrid: React.FC = () => {
       </div>
     </div>
   );
+  
 };
 
 export default ProductGrid;
