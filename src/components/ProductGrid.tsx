@@ -5,6 +5,7 @@ import { useCartStore } from '../store/cartStore';
 import { Product } from '../types';
 import { Loader } from 'lucide-react';
 import { useAuthStore } from "../store/authStore";
+import { useNavigate } from 'react-router-dom';
 
 const getDelay = () => {
   const user = useAuthStore.getState().user;
@@ -12,12 +13,13 @@ const getDelay = () => {
 };
 
 const ProductGrid: React.FC = () => {
-  const delay = getDelay(); // Get the delay time
+  const navigate = useNavigate();
+  const delay = getDelay();
 
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, delay)); // Apply delay before fetching
+      await new Promise((resolve) => setTimeout(resolve, delay));
       return fetchProducts();
     },
   });
@@ -28,7 +30,7 @@ const ProductGrid: React.FC = () => {
   const [quantities, setQuantities] = useState<{ [key: number]: number }>(
     products?.reduce((acc, product) => ({ ...acc, [product.id]: 0 }), {}) || {}
   );  
-  const [sortOption, setSortOption] = useState('hilo'); // Default: Price (high to low)
+  const [sortOption, setSortOption] = useState('hilo');
 
   const handleIncrease = (productId: number, stock: number) => {
     setQuantities(prev => ({
@@ -40,16 +42,15 @@ const ProductGrid: React.FC = () => {
   const handleDecrease = (productId: number) => {
     setQuantities(prev => ({
       ...prev,
-      [productId]: Math.max(0, (prev[productId] || 0) - 1) // Allow 0
+      [productId]: Math.max(0, (prev[productId] || 0) - 1)
     }));
   };
-  
 
   const handleAddToCart = async (product: Product) => {
-    const delay = getDelay(); // Get the delay time
-    console.log(`Applied Delay: ${delay}ms`); // Debugging
+    const delay = getDelay();
+    console.log(`Applied Delay: ${delay}ms`);
   
-    await new Promise((resolve) => setTimeout(resolve, delay)); // Apply delay
+    await new Promise((resolve) => setTimeout(resolve, delay));
   
     const quantity = quantities[product.id] || 0;
     for (let i = 0; i < quantity; i++) {
@@ -58,18 +59,19 @@ const ProductGrid: React.FC = () => {
   };
   
   const handleRemoveFromCart = (product: Product) => {
-    removeFromCart(product.id); // Remove the product from cart
-    
-    // Reset quantity display to 0
+    removeFromCart(product.id);
     setQuantities(prev => ({
       ...prev,
-      [product.id]: 0 // Set the removed product's quantity to 0
+      [product.id]: 0
     }));
   };
-  
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(event.target.value);
+  };
+
+  const navigateToProduct = (productId: number) => {
+    navigate(`/product/${productId}`);
   };
 
   const sortedProducts = products ? [...products].sort((a, b) => {
@@ -98,7 +100,6 @@ const ProductGrid: React.FC = () => {
 
   return (
     <div id="product-page">
-      {/* Header Section with Filters */}
       <div id="header-section" className="flex justify-between items-center bg-gray-100 p-4 rounded-md mb-4">
         <span id="products-title" className="text-xl font-semibold">Products</span>
         <div id="sort-container" className="flex items-center space-x-2">
@@ -117,28 +118,36 @@ const ProductGrid: React.FC = () => {
         </div>
       </div>
   
-      {/* Product Grid */}
       <div id="product-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedProducts.map((product) => {
           const isInCart = items.some(item => item.id === product.id);
           return (
             <div key={product.id} id={`product-${product.id}`} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div id={`product-image-${product.id}`} className="h-48 overflow-hidden">
+              <div 
+                id={`product-image-${product.id}`} 
+                className="h-48 overflow-hidden cursor-pointer"
+                onClick={() => navigateToProduct(product.id)}
+              >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
                   loading="lazy"
                 />
               </div>
               <div id={`product-info-${product.id}`} className="p-4">
-                <h3 id={`product-name-${product.id}`} className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                <h3 
+                  id={`product-name-${product.id}`} 
+                  className="text-lg font-semibold text-gray-800 cursor-pointer hover:text-emerald-600"
+                  onClick={() => navigateToProduct(product.id)}
+                >
+                  {product.name}
+                </h3>
                 <p id={`product-description-${product.id}`} className="mt-1 text-gray-600 text-sm line-clamp-2">{product.description}</p>
                 <div className="mt-3 flex items-center justify-between">
                   <span id={`product-price-${product.id}`} className="text-emerald-600 font-bold">£{product.price.toFixed(2)}</span>
   
                   <div id={`cart-controls-${product.id}`} className="flex items-center space-x-2">
-                    {/* Decrease Button */}
                     <button
                       id={`decrease-btn-${product.id}`}
                       onClick={() => handleDecrease(product.id)}
@@ -147,10 +156,8 @@ const ProductGrid: React.FC = () => {
                       <strong>-</strong>
                     </button>
   
-                    {/* Quantity Display */}
                     <span id={`product-quantity-${product.id}`} className="px-1 text-lg font-semibold">{quantities[product.id] || 0}</span>
   
-                    {/* Increase Button */}
                     <button
                       id={`increase-btn-${product.id}`}
                       onClick={() => handleIncrease(product.id, product.stock)}
@@ -160,7 +167,6 @@ const ProductGrid: React.FC = () => {
                       <strong>+</strong>
                     </button>
   
-                    {/* Add to Cart Button */}
                     <button
                       id={`add-to-cart-btn-${product.id}`}
                       onClick={() => handleAddToCart(product)}
@@ -169,7 +175,6 @@ const ProductGrid: React.FC = () => {
                       Add
                     </button>
   
-                    {/* Show Remove Button only if product is in cart */}
                     {isInCart && (
                       <button
                         id={`remove-from-cart-btn-${product.id}`}
@@ -188,7 +193,6 @@ const ProductGrid: React.FC = () => {
       </div>
     </div>
   );
-  
 };
 
 export default ProductGrid;

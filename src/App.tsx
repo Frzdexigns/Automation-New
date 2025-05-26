@@ -4,15 +4,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from './store/authStore';
 import Login from './components/Login';
 import Home from './pages/Home';
+import ProductView from './pages/ProductView';
 import CheckoutInformation from './pages/checkout/CheckoutInformation';
 import CheckoutOverview from './pages/checkout/CheckoutOverview';
 import CheckoutComplete from './pages/checkout/CheckoutComplete';
 import Admin from './pages/Admin';
 
-// Create a client
 const queryClient = new QueryClient();
 
-// Protected route component
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
@@ -27,7 +26,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-// Auth listener component to handle redirects after login/logout
 const AuthListener = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,6 +55,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/product/:id" 
+            element={
+              <ProtectedRoute>
+                <ProductView />
               </ProtectedRoute>
             } 
           />
