@@ -8,40 +8,44 @@ const getDelay = () => {
   return user?.type === "performance_glitch" ? 2000 : 0;
 };
 
-const { data: session } = await supabase.auth.getSession();
-console.log("Session Data:", session);
-
-if (!session?.session) {
-  console.error("No session found, trying to refresh...");
-  await supabase.auth.refreshSession(); // Forces a refresh
-}
-
-
 // Fetch all products from Supabase
 export const fetchProducts = async (): Promise<Product[]> => {
   return new Promise(async (resolve, reject) => {
-    setTimeout(async () => {
-      const { data, error } = await supabase.from("products").select("*");
-
-      if (error) {
-        reject(new Error("Failed to fetch products"));
-        return;
+    try {
+      // Check session before making the request
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        const { error } = await supabase.auth.refreshSession();
+        if (error) {
+          console.warn("Session refresh failed:", error.message);
+        }
       }
 
-      const user = useAuthStore.getState().user;
+      setTimeout(async () => {
+        const { data, error } = await supabase.from("products").select("*");
 
-      if (user?.type === 'visual') {
-        resolve(
-          data.map((product) => ({
-            ...product,
-            image:
-              "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
-          }))
-        );
-      } else {
-        resolve(data);
-      }
-    }, getDelay());
+        if (error) {
+          reject(new Error("Failed to fetch products"));
+          return;
+        }
+
+        const user = useAuthStore.getState().user;
+
+        if (user?.type === 'visual') {
+          resolve(
+            data.map((product) => ({
+              ...product,
+              image:
+                "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
+            }))
+          );
+        } else {
+          resolve(data);
+        }
+      }, getDelay());
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
