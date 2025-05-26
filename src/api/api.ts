@@ -1,48 +1,15 @@
 import { supabase } from "./supabaseClient";
 import { Product } from "../types";
-import { useAuthStore } from "../store/authStore";
-
-// Introduce artificial delay for performance_glitch_user
-const getDelay = () => {
-  const user = useAuthStore.getState().user;
-  return user?.type === "performance_glitch" ? 2000 : 0;
-};
-
-const { data: session } = await supabase.auth.getSession();
-console.log("Session Data:", session);
-
-if (!session?.session) {
-  console.error("No session found, trying to refresh...");
-  await supabase.auth.refreshSession(); // Forces a refresh
-}
-
 
 // Fetch all products from Supabase
 export const fetchProducts = async (): Promise<Product[]> => {
-  return new Promise(async (resolve, reject) => {
-    setTimeout(async () => {
-      const { data, error } = await supabase.from("products").select("*");
+  const { data, error } = await supabase.from("products").select("*");
 
-      if (error) {
-        reject(new Error("Failed to fetch products"));
-        return;
-      }
+  if (error) {
+    throw new Error("Failed to fetch products");
+  }
 
-      const user = useAuthStore.getState().user;
-
-      if (user?.type === "visual") {
-        resolve(
-          data.map((product) => ({
-            ...product,
-            image:
-              "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
-          }))
-        );
-      } else {
-        resolve(data);
-      }
-    }, getDelay());
-  });
+  return data;
 };
 
 // Add a new product
@@ -78,32 +45,25 @@ export const addProduct = async (product: Omit<Product, "id">): Promise<Product>
 
 // Update an existing product
 export const updateProduct = async (id: number, updates: Partial<Product>): Promise<Product> => {
-  return new Promise(async (resolve, reject) => {
-    setTimeout(async () => {
-      const { data, error } = await supabase.from("products").update(updates).eq("id", id).select().single();
+  const { data, error } = await supabase
+    .from("products")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
 
-      if (error) {
-        reject(new Error("Failed to update product"));
-        return;
-      }
+  if (error) {
+    throw new Error("Failed to update product");
+  }
 
-      resolve(data);
-    }, getDelay());
-  });
+  return data;
 };
 
 // Delete a product
 export const deleteProduct = async (id: number): Promise<void> => {
-  return new Promise(async (resolve, reject) => {
-    setTimeout(async () => {
-      const { error } = await supabase.from("products").delete().eq("id", id);
+  const { error } = await supabase.from("products").delete().eq("id", id);
 
-      if (error) {
-        reject(new Error("Failed to delete product"));
-        return;
-      }
-
-      resolve();
-    }, getDelay());
-  });
+  if (error) {
+    throw new Error("Failed to delete product");
+  }
 };
